@@ -6,13 +6,14 @@ export default function Home() {
         <main className="w-full">
           <section className="grid grid-cols-2 h-[80vh] w-full">
             <div className="text flex items-center justify-center">
-              <p className="text-4xl">Best Url Shortner in The Market.</p>
+              <p className={`text-4xl font-poppin font-bold`}>Best Url Shortner in The Market.</p>
             </div>
             <div className="cat relative w-full">
               <Image
                 src={"/coolCat2.png"}
                 fill
                 sizes=""
+                alt="hero-cat"
               />
             </div>
           </section>
