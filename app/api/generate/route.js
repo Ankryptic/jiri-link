@@ -13,7 +13,7 @@ export async function POST(request) {
         // Data
         let data = {
             url: req.url,
-            shorturl: req.shorturl
+            prefferedUrl: (req.prefferedUrl).toLowerCase()
         }
 
         // Adding data to database
@@ -22,7 +22,8 @@ export async function POST(request) {
         return NextResponse.json({
             success: true, 
             error: false, 
-            message: "ShortURL created successfully"
+            message: "ShortURL created successfully",
+            shortURL: `${process.env.NEXT_PUBLIC_URL}${data.prefferedUrl}`
         })
 
     } catch (error) {

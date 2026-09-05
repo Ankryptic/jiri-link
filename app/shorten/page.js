@@ -14,13 +14,49 @@ const Shorten = () => {
     })
     const [generatedURL, setGeneratedURL] = useState("")
 
-    const handleGenerate = () => {
-        let res = validateForm()
+    const handleGenerate = async () => {
+        let valid = validateForm()
 
-        if(!res) {
+        if(!valid) {
             return
         }
-        console.log(urlForm)
+
+        // Save the form in db and return the shortURL
+        let res = await generateShortURL()
+        if(res.success){
+            setUrlForm({
+                url: "",
+                prefferedUrl: ""
+            })
+            setGeneratedURL(res.shortURL)
+            return
+        }
+    }
+
+    const generateShortURL = async() => {
+        try {
+            const requestOption = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(urlForm)
+            }
+
+            console.log(requestOption)
+
+            const res = await fetch(`/api/generate`, requestOption)
+            const data = await res.json()
+            return data;
+
+        } catch (error) {
+            console.log(error)
+            return {
+                success: false,
+                error: true,
+                message: "Some Error Occured"
+            }
+        }
     }
 
     const validateForm = () => {
@@ -34,6 +70,13 @@ const Shorten = () => {
 
             return false;
         }
+
+        setError({
+            urlError: "",
+            prefferedError: ""
+        })
+
+        return true;
     }
 
     return (
@@ -75,9 +118,9 @@ const Shorten = () => {
                         </div>
 
                         <div className="w-full flex flex-col items-center justify-center">
-                            <div className="w-[50%] bg-gray-900 h-30 p-2 rounded-xl text-center">
-                                <span className="font-bold underline">Generated Link</span>
-                                <code>{generatedURL}</code>
+                            <div className="w-[50%] bg-gray-900 h-30 p-2 rounded-xl text-center flex flex-col gap-4 cursor-pointer">
+                                <span className="font-bold underline">Last Generated Link</span>
+                                <Link href={generatedURL} target="_blank"><code>{generatedURL}</code></Link>
                             </div>
                         </div>
                     </div>
