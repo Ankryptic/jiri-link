@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const Shorten = () => {
@@ -14,16 +14,18 @@ const Shorten = () => {
     })
     const [generatedURL, setGeneratedURL] = useState("")
 
+    let shortUrlArr = []
+
     const handleGenerate = async () => {
         let valid = validateForm()
 
-        if(!valid) {
+        if (!valid) {
             return
         }
 
         // Save the form in db and return the shortURL
         let res = await generateShortURL()
-        if(res.success){
+        if (res.success) {
             setUrlForm({
                 url: "",
                 prefferedUrl: ""
@@ -33,7 +35,7 @@ const Shorten = () => {
         }
     }
 
-    const generateShortURL = async() => {
+    const generateShortURL = async () => {
         try {
             const requestOption = {
                 method: "POST",
@@ -60,12 +62,12 @@ const Shorten = () => {
     }
 
     const validateForm = () => {
-        if(urlForm.url === "" || urlForm.prefferedUrl === ""){
-            if(urlForm.url === ""){
-                setError(prev => ({...prev, urlError: "Field is Required!"}))
+        if (urlForm.url === "" || urlForm.prefferedUrl === "") {
+            if (urlForm.url === "") {
+                setError(prev => ({ ...prev, urlError: "Field is Required!" }))
             }
-            if(urlForm.prefferedUrl === ""){
-                setError(prev => ({...prev, prefferedError: "Field is Required!"}))
+            if (urlForm.prefferedUrl === "") {
+                setError(prev => ({ ...prev, prefferedError: "Field is Required!" }))
             }
 
             return false;
@@ -78,6 +80,15 @@ const Shorten = () => {
 
         return true;
     }
+
+    const updateHistory = () => {
+
+    }
+
+    useEffect(() => {
+        shortUrlArr = updateHistory()
+        console.log(shortUrlArr)
+    }, [])
 
     return (
         <div className="flex flex-1 flex-col">
@@ -136,9 +147,12 @@ const Shorten = () => {
                                 <li className="list-none text-center">
                                     <span className="text-blue-400 font-bold">-- Start -- </span>
                                 </li>
-                                <li className="text-sm">
-                                    <Link href={"https://localhost:3000/google"}>https://localhost:3000/google</Link>
-                                </li>
+                                {shortUrlArr.map((data) => {
+                                    <li className="text-sm">
+                                        <Link href={"/google"} target="_blank">Google</Link>
+                                    </li>
+                                })}
+
                                 <li className="list-none text-center">
                                     <span className="text-red-400 font-bold">-- End -- </span>
                                 </li>
