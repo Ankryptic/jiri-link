@@ -14,7 +14,7 @@ const Shorten = () => {
     })
     const [generatedURL, setGeneratedURL] = useState("")
 
-    let shortUrlArr = []
+    const [shortUrlArr, setShortUrlArr] = useState([])
 
     const handleGenerate = async () => {
         let valid = validateForm()
@@ -81,14 +81,24 @@ const Shorten = () => {
         return true;
     }
 
-    const updateHistory = () => {
-
+    const updateHistory = async () => {
+        try {
+            const res = await fetch("/api/getshorturl")
+            const data = await res.json();
+            setShortUrlArr(data)
+            console.log(shortUrlArr)
+            return;
+        } catch (error) {
+            console.log(error)
+            setShortUrlArr([])
+            return 
+        }
     }
 
+
     useEffect(() => {
-        shortUrlArr = updateHistory()
-        console.log(shortUrlArr)
-    }, [])
+        updateHistory()
+    }, [generatedURL])
 
     return (
         <div className="flex flex-1 flex-col">
@@ -147,9 +157,9 @@ const Shorten = () => {
                                 <li className="list-none text-center">
                                     <span className="text-blue-400 font-bold">-- Start -- </span>
                                 </li>
-                                {shortUrlArr.map((data) => {
-                                    <li className="text-sm">
-                                        <Link href={"/google"} target="_blank">Google</Link>
+                                {shortUrlArr.map((data, idx) => {
+                                   return <li key={idx} className="text-sm">
+                                        <Link href={`${data.url}`} target="_blank">{data.prefferedUrl}</Link>
                                     </li>
                                 })}
 
