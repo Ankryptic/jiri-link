@@ -13,7 +13,7 @@ export async function POST(request) {
         // Data
         let data = {
             url: req.url,
-            prefferedUrl: (req.prefferedUrl).toLowerCase()
+            prefferedUrl: req.prefferedUrl
         }
 
         // Adding data to database
