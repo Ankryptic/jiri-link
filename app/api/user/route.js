@@ -9,6 +9,7 @@ export async function GET() {
 
     // if userId is not available then assign one
     if(!userId){
+        console.log("Generating....");
         userId = randomUUID();
 
         cookieStore.set("user_id", userId, {
@@ -19,6 +20,8 @@ export async function GET() {
             path: "/"
         });
     }
+
+    console.log(userId);
 
     return NextResponse.json({
         userId
